@@ -1,0 +1,217 @@
+@use "sass:math";
+@use "@termehui/termeh/termeh.scss" as T;
+
+$-positions: (
+    top: bottom,
+    bottom: top,
+    left: right,
+    right: left,
+);
+
+.v-popper-container {
+    display: block;
+    box-sizing: border-box;
+    max-width: 100%;
+    z-index: 1;
+    padding: 1px;
+
+    @each $p, $m in $-positions {
+        &[data-popper-placement^="#{$p}"] {
+            padding-#{$m}: 7px;
+        }
+    }
+}
+
+.v-popup {
+    $-gap: T.var("popup", "gap", 1em);
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    padding: $-gap;
+    color: T.variant("base", "color");
+    background: T.variant("base", "box");
+    border-radius: T.var("radius", "normal");
+    border: T.var("popup", "border", 1px solid T.variant("base", "separator"));
+    box-shadow: T.var(
+        "popup",
+        "shadow",
+        (
+            T.shadow(0, 3px, T.color("shade"), false),
+            T.shadow(0, 6px, T.color("shade"), true)
+        )
+    );
+
+    > .arrow {
+        position: absolute;
+        box-sizing: border-box;
+        border-style: solid;
+        border-color: transparent;
+        border-width: 5px;
+        z-index: -1;
+
+        @at-root {
+            @each $p, $m in $-positions {
+                [data-popper-placement^="#{$p}"] & {
+                    border-#{$m}-width: 0;
+                    border-#{$p}-color: T.var(
+                        "popup",
+                        "arrow-color",
+                        T.color("shade")
+                    );
+                    #{$p}: 100%;
+                }
+            }
+        }
+    }
+
+    > .separator {
+        display: block;
+        box-sizing: border-box;
+        height: 1px;
+        background: T.variant("base", "separator");
+        margin: 0 T.negate($-gap);
+    }
+
+    > .attachment {
+        display: block;
+        box-sizing: border-box;
+        margin: 0 T.negate($-gap);
+        padding: $-gap;
+
+        &:first-child,
+        &.is-header {
+            margin-top: T.negate($-gap);
+        }
+        &:last-child,
+        &.is-footer {
+            margin-bottom: T.negate($-gap);
+        }
+
+        &.is-secondary {
+            background: T.variant("base", "section");
+        }
+    }
+
+    &.is-loading {
+        @include T.overlay(
+            T.var("overlay", "background"),
+            T.var("overlay", "filter")
+        );
+        @include T.loader(
+            T.var("spinner", "size"),
+            T.color("shade"),
+            T.var("decorator", "size")
+        );
+    }
+
+    @each $name, $gap in T.gaps(T.var("popup", "gaps", ())) {
+        &.is-#{$name}-gaped {
+            padding: $gap;
+
+            > .separator {
+                margin: 0 T.negate($gap);
+            }
+
+            > .attachment {
+                margin: 0 T.negate($gap);
+                padding: $gap;
+
+                &:first-child,
+                &.is-header {
+                    margin-top: T.negate($gap);
+                }
+                &:last-child,
+                &.is-footer {
+                    margin-bottom: T.negate($gap);
+                }
+            }
+        }
+    }
+
+    @each $name, $color in T.colors(T.var("popup", "colors", ())) {
+        &.is-#{$name} {
+            border: T.var("popup", "#{$name}-border", (1px solid $color));
+            box-shadow: T.var("popup", "#{$name}-shadow");
+
+            > .arrow {
+                @at-root {
+                    @each $p, $m in $-positions {
+                        [data-popper-placement^="#{$p}"] & {
+                            border-#{$p}-color: T.var(
+                                "popup",
+                                "#{$name}-arrow-color",
+                                $color
+                            );
+                        }
+                    }
+                }
+            }
+
+            &.is-loading {
+                @include T.loader-color($color);
+            }
+        }
+    }
+}
+
+.v-tooltip {
+    $background: T.var("tooltip", "background", rgba(0, 0, 0, 0.9));
+    $color: T.var("tooltip", "color", white);
+
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    padding: T.control-padding();
+    color: white;
+    background: $background;
+    border-radius: T.var("radius", "normal");
+    box-shadow: T.var(
+        "tooltip",
+        "shadow",
+        (
+            T.shadow(0, 3px, T.color("shade"), false),
+            T.shadow(0, 6px, T.color("shade"), true)
+        )
+    );
+
+    > .arrow {
+        position: absolute;
+        box-sizing: border-box;
+        border-style: solid;
+        border-color: transparent;
+        border-width: 4px;
+
+        @at-root {
+            @each $p, $m in $-positions {
+                [data-popper-placement^="#{$p}"] & {
+                    border-#{$m}-width: 0;
+                    border-#{$p}-color: rgba($background, 1);
+                    #{$p}: 100%;
+                }
+            }
+        }
+    }
+
+    &.is-loading {
+        $overlay: T.var("tooltip", "overlay", rgba($background, 0.75));
+        @include T.overlay($overlay, T.var("overlay", "filter"));
+        @include T.loader(1em, $color, T.var("decorator", "size"));
+    }
+
+    @each $name, $gap in T.gaps(T.var("tooltip", "gaps", ())) {
+        &.is-#{$name}-padded {
+            padding: math.div($gap, 2) $gap;
+        }
+    }
+
+    @each $name, $color in T.colors(T.var("tooltip", "colors", ())) {
+        &.is-#{$name} {
+            box-shadow: T.var("tooltip", "#{$name}-shadow");
+            &.is-loading {
+                @include T.loader-color(
+                    T.variant($name, "tooltip", T.variant($name, "inverse"))
+                );
+            }
+        }
+    }
+}

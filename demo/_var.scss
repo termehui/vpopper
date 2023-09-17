@@ -1,0 +1,11 @@
+@use "@termehui/termeh/termeh.scss" as T;
+@include T.define("font", "family", "calibri");
+@include T.define(
+    "popper",
+    "primary-shadow",
+    (
+        T.shadow(0, 1px, T.color("primary"), false),
+        T.shadow(0, 8px, T.color("primary"), true)
+    )
+);
+@include T.define-palette("success", #2b9348);
