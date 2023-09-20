@@ -2,21 +2,21 @@
     "private": false,
     "type": "module",
     "license": "ISC",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "name": "@termehui/vpopper",
     "description": "PopperJs powered popup for vue 3",
-    "main": "./dist/vmodal.umd.js",
-    "module": "./dist/vmodal.es.js",
-    "types": "./dist/vmodal.d.ts",
+    "main": "./dist/vpopper.umd.js",
+    "module": "./dist/vpopper.es.js",
+    "types": "./dist/vpopper.d.ts",
     "exports": {
         ".": {
             "import": {
-                "types": "./dist/vmodal.d.ts",
-                "default": "./dist/vmodal.es.js"
+                "types": "./dist/vpopper.d.ts",
+                "default": "./dist/vpopper.es.js"
             },
             "require": {
-                "types": "./dist/vmodal.d.ts",
-                "default": "./dist/vmodal.umd.js"
+                "types": "./dist/vpopper.d.ts",
+                "default": "./dist/vpopper.umd.js"
             }
         },
         "./style.css": "./dist/style.css",
